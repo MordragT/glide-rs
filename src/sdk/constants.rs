@@ -1,4 +1,4 @@
-use crate::kinds::FxI32;
+use super::kinds::{FxI32, FxU32};
 use num_enum::TryFromPrimitive;
 
 /* Types of data in strips */
@@ -6,28 +6,28 @@ pub const GR_FLOAT: FxI32 = 0;
 pub const GR_U8: FxI32 = 1;
 
 /* Parameters for strips */
-// pub const GR_PARAM_XY: FxI32 = 0x01;
-// pub const GR_PARAM_Z: FxI32 = 0x02;
-// pub const GR_PARAM_W: FxI32 = 0x03;
-// pub const GR_PARAM_Q: FxI32 = 0x04;
-// pub const GR_PARAM_FOG_EXT: FxI32 = 0x05;
+pub const GR_PARAM_XY: FxI32 = 0x01;
+pub const GR_PARAM_Z: FxI32 = 0x02;
+pub const GR_PARAM_W: FxI32 = 0x03;
+pub const GR_PARAM_Q: FxI32 = 0x04;
+pub const GR_PARAM_FOG_EXT: FxI32 = 0x05;
 
-// pub const GR_PARAM_A: FxI32 = 0x10;
+pub const GR_PARAM_A: FxI32 = 0x10;
 
-// pub const GR_PARAM_RGB: FxI32 = 0x20;
+pub const GR_PARAM_RGB: FxI32 = 0x20;
 
-// pub const GR_PARAM_PARGB: FxI32 = 0x30;
+pub const GR_PARAM_PARGB: FxI32 = 0x30;
 
-// pub const GR_PARAM_ST0: FxI32 = 0x40;
-// pub const GR_PARAM_ST1: FxI32 = GR_PARAM_ST0 + 1;
-// pub const GR_PARAM_ST2: FxI32 = GR_PARAM_ST0 + 2;
+pub const GR_PARAM_ST0: FxI32 = 0x40;
+pub const GR_PARAM_ST1: FxI32 = GR_PARAM_ST0 + 1;
+pub const GR_PARAM_ST2: FxI32 = GR_PARAM_ST0 + 2;
 
-// pub const GR_PARAM_Q0: FxI32 = 0x50;
-// pub const GR_PARAM_Q1: FxI32 = GR_PARAM_Q0 + 1;
-// pub const GR_PARAM_Q2: FxI32 = GR_PARAM_Q0 + 2;
+pub const GR_PARAM_Q0: FxI32 = 0x50;
+pub const GR_PARAM_Q1: FxI32 = GR_PARAM_Q0 + 1;
+pub const GR_PARAM_Q2: FxI32 = GR_PARAM_Q0 + 2;
 
-pub const GR_PARAM_DISABLE: FxI32 = 0x00;
-pub const GR_PARAM_ENABLE: FxI32 = 0x01;
+pub const GR_PARAM_DISABLE: FxU32 = 0x00;
+pub const GR_PARAM_ENABLE: FxU32 = 0x01;
 
 /*
 ** grDrawVertexArray/grDrawVertexArrayContiguous primitive type

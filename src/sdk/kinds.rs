@@ -1,5 +1,7 @@
 use std::ffi::c_void;
 
+use winit::dpi::PhysicalSize;
+
 pub type FxU8 = u8;
 pub type FxI8 = i8;
 pub type FxU16 = u16;
@@ -95,6 +97,30 @@ pub enum GrScreenResolution_t {
     GR_RESOLUTION_1600x1200 = 0xE,
     GR_RESOLUTION_400x300 = 0xF,
     GR_RESOLUTION_NONE = 0xff,
+}
+
+impl From<GrScreenResolution_t> for PhysicalSize<u32> {
+    fn from(res: GrScreenResolution_t) -> Self {
+        match res {
+            GrScreenResolution_t::GR_RESOLUTION_320x200 => PhysicalSize::from([320, 200]),
+            GrScreenResolution_t::GR_RESOLUTION_320x240 => PhysicalSize::from([320, 240]),
+            GrScreenResolution_t::GR_RESOLUTION_400x256 => PhysicalSize::from([400, 256]),
+            GrScreenResolution_t::GR_RESOLUTION_512x384 => PhysicalSize::from([512, 384]),
+            GrScreenResolution_t::GR_RESOLUTION_640x200 => PhysicalSize::from([640, 200]),
+            GrScreenResolution_t::GR_RESOLUTION_640x350 => PhysicalSize::from([640, 350]),
+            GrScreenResolution_t::GR_RESOLUTION_640x400 => PhysicalSize::from([640, 400]),
+            GrScreenResolution_t::GR_RESOLUTION_640x480 => PhysicalSize::from([640, 480]),
+            GrScreenResolution_t::GR_RESOLUTION_800x600 => PhysicalSize::from([800, 600]),
+            GrScreenResolution_t::GR_RESOLUTION_960x720 => PhysicalSize::from([960, 720]),
+            GrScreenResolution_t::GR_RESOLUTION_856x480 => PhysicalSize::from([856, 480]),
+            GrScreenResolution_t::GR_RESOLUTION_512x256 => PhysicalSize::from([512, 256]),
+            GrScreenResolution_t::GR_RESOLUTION_1024x768 => PhysicalSize::from([1024, 768]),
+            GrScreenResolution_t::GR_RESOLUTION_1280x1024 => PhysicalSize::from([1280, 1024]),
+            GrScreenResolution_t::GR_RESOLUTION_1600x1200 => PhysicalSize::from([1600, 1200]),
+            GrScreenResolution_t::GR_RESOLUTION_400x300 => PhysicalSize::from([400, 300]),
+            GrScreenResolution_t::GR_RESOLUTION_NONE => PhysicalSize::from([1280, 1024]),
+        }
+    }
 }
 
 #[allow(non_camel_case_types)]
@@ -285,6 +311,17 @@ pub enum GrColorFormat_t {
 
     GR_COLORFORMAT_RGBA = 0x2,
     GR_COLORFORMAT_BGRA = 0x3,
+}
+
+impl From<GrColorFormat_t> for wgpu::TextureFormat {
+    fn from(format: GrColorFormat_t) -> Self {
+        match format {
+            GrColorFormat_t::GR_COLORFORMAT_ABGR => panic!(),
+            GrColorFormat_t::GR_COLORFORMAT_ARGB => panic!(),
+            GrColorFormat_t::GR_COLORFORMAT_BGRA => wgpu::TextureFormat::Bgra8Unorm,
+            GrColorFormat_t::GR_COLORFORMAT_RGBA => wgpu::TextureFormat::Rgba8Unorm,
+        }
+    }
 }
 
 #[allow(non_camel_case_types)]
@@ -494,15 +531,16 @@ pub enum GrTexBaseRange_t {
     GR_TEXBASE_32_TO_1 = 0x0,
 }
 
+#[allow(non_camel_case_types)]
 pub type GrEnableMode_t = FxU32;
 
-// pub const GR_MODE_DISABLE: FxU32 = 0x0;
-// pub const GR_MODE_ENABLE: FxU32 = 0x1;
-// pub const GR_AA_ORDERED : FxU32= 0x01;
-// pub const GR_ALLOW_MIPMAP_DITHER: FxU32 = 0x02;
-// pub const GR_PASSTHRU: FxU32 = 0x03;
-// pub const GR_SHAMELESS_PLUG: FxU32 = 0x04;
-// pub const GR_VIDEO_SMOOTHING: FxU32 = 0x05;
+pub const GR_MODE_DISABLE: FxU32 = 0x0;
+pub const GR_MODE_ENABLE: FxU32 = 0x1;
+pub const GR_AA_ORDERED: FxU32 = 0x01;
+pub const GR_ALLOW_MIPMAP_DITHER: FxU32 = 0x02;
+pub const GR_PASSTHRU: FxU32 = 0x03;
+pub const GR_SHAMELESS_PLUG: FxU32 = 0x04;
+pub const GR_VIDEO_SMOOTHING: FxU32 = 0x05;
 
 #[allow(non_camel_case_types)]
 #[repr(u32)]

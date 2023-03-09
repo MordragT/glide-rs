@@ -1,67 +1,31 @@
 #![cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 
-use wgpu::VertexBufferLayout;
+pub mod constants;
+pub mod kinds;
 
-use crate::kinds::*;
-use crate::*;
-use std::{borrow::BorrowMut, convert::TryFrom, ffi::c_void};
+use crate::State;
+use constants::*;
+use kinds::*;
+use log::debug;
+use raw_window_handle::WaylandDisplayHandle;
+use std::ffi::c_void;
 
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn grDrawPoint(point: *const c_void) {
-    // grEnable, grVertexLayout
-    todo!();
+    debug!("grDrawPoint");
+    todo!()
 }
 
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn grDrawLine(v1: *const c_void, v2: *const c_void) {
-    todo!();
+    debug!("grDrawLine");
+    todo!()
 }
 
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn grDrawTriangle(a: *const c_void, b: *const c_void, c: *const c_void) {
-    todo!();
-}
-
-#[allow(non_snake_case)]
-pub unsafe extern "C" fn grVertexLayout(param: FxU32, offset: FxI32, mode: FxU32) {
-    let param = match GrParam::try_from(param) {
-        Ok(p) => p,
-        Err(_) => panic!(), // TODO: error handling
-    };
-    let mode = match mode {
-        0 => false,
-        1 => true,
-        _ => panic!(), // TODO: error handling
-    };
-    let format = match param {
-        GrParam::XY => wgpu::VertexFormat::Float2,
-        GrParam::Z => wgpu::VertexFormat::Float,
-        GrParam::W => wgpu::VertexFormat::Float,
-        GrParam::Q => wgpu::VertexFormat::Float,
-        GrParam::ST0 => wgpu::VertexFormat::Float2,
-        GrParam::ST1 => wgpu::VertexFormat::Float2,
-        GrParam::ST2 => wgpu::VertexFormat::Float2,
-        GrParam::Q0 => wgpu::VertexFormat::Float,
-        GrParam::Q1 => wgpu::VertexFormat::Float,
-        GrParam::Q2 => wgpu::VertexFormat::Float,
-        GrParam::A => wgpu::VertexFormat::Float,
-        GrParam::RGB => wgpu::VertexFormat::Float3,
-        GrParam::PARGB => wgpu::VertexFormat::Uint,
-        GrParam::FogExt => wgpu::VertexFormat::Float,
-    };
-    let buffer_layout = wgpu::VertexBufferLayout {
-        array_stride: (*STATE).vertex_layout.array_stride + format.size(),
-        step_mode: wgpu::InputStepMode::Vertex,
-        attributes: {
-            let last = (*STATE).vertex_attributes.last().unwrap();
-            (*STATE).vertex_attributes.push(wgpu::VertexAttribute {
-                offset: last.offset + last.format.size(),
-                shader_location: last.shader_location + 1,
-                format,
-            });
-            (*STATE).vertex_attributes.as_slice()
-        },
-    };
+    debug!("grDrawTriangle");
+    todo!()
 }
 
 #[allow(non_snake_case)]
@@ -145,51 +109,26 @@ pub unsafe extern "C" fn grSstWinOpen(
     nColBuffers: FxI32,
     nAuxBuffers: FxI32,
 ) -> GrContext_t {
-    #[cfg(target_os = "windows")]
-    let window_handle = {
-        let h = if window_handle == 0 {
-            winapi::um::winuser::GetActiveWindow() as *mut c_void
-        } else {
-            window_handle as *mut c_void
-        };
-        let instance = 
-        raw_window_handle::windows::WindowsHandle 
-    };
+    // #[cfg(target_os = "windows")]
+    // let window_handle = {
+    //     let h = if window_handle == 0 {
+    //         winapi::um::winuser::GetActiveWindow() as *mut c_void
+    //     } else {
+    //         window_handle as *mut c_void
+    //     };
+    //     let instance = raw_window_handle::windows::WindowsHandle;
+    // };
 
-    #[cfg(target_os = "linux")]
-    let window_handle = if window_handle == 0 {
-        panic!()
-    } else {
-        window_handle
-    };
-    let color_format = match color_format {
-        GrColorFormat_t::GR_COLORFORMAT_ABGR => panic!(),
-        GrColorFormat_t::GR_COLORFORMAT_ARGB => panic!(),
-        GrColorFormat_t::GR_COLORFORMAT_BGRA => wgpu::TextureFormat::Bgra8Unorm,
-        GrColorFormat_t::GR_COLORFORMAT_RGBA => wgpu::TextureFormat::Rgba8Unorm,
-    };
-    let resolution = match screen_resolution {
-        GrScreenResolution_t::GR_RESOLUTION_320x200 => UVec2::from([320, 200]),
-        GrScreenResolution_t::GR_RESOLUTION_320x240 => UVec2::from([320, 240]),
-        GrScreenResolution_t::GR_RESOLUTION_400x256 => UVec2::from([400, 256]),
-        GrScreenResolution_t::GR_RESOLUTION_512x384 => UVec2::from([512, 384]),
-        GrScreenResolution_t::GR_RESOLUTION_640x200 => UVec2::from([640, 200]),
-        GrScreenResolution_t::GR_RESOLUTION_640x350 => UVec2::from([640, 350]),
-        GrScreenResolution_t::GR_RESOLUTION_640x400 => UVec2::from([640, 400]),
-        GrScreenResolution_t::GR_RESOLUTION_640x480 => UVec2::from([640, 480]),
-        GrScreenResolution_t::GR_RESOLUTION_800x600 => UVec2::from([800, 600]),
-        GrScreenResolution_t::GR_RESOLUTION_960x720 => UVec2::from([960, 720]),
-        GrScreenResolution_t::GR_RESOLUTION_856x480 => UVec2::from([856, 480]),
-        GrScreenResolution_t::GR_RESOLUTION_512x256 => UVec2::from([512, 256]),
-        GrScreenResolution_t::GR_RESOLUTION_1024x768 => UVec2::from([1024, 768]),
-        GrScreenResolution_t::GR_RESOLUTION_1280x1024 => UVec2::from([1280, 1024]),
-        GrScreenResolution_t::GR_RESOLUTION_1600x1200 => UVec2::from([1600, 1200]),
-        GrScreenResolution_t::GR_RESOLUTION_400x300 => UVec2::from([400, 300]),
-        GrScreenResolution_t::GR_RESOLUTION_NONE => UVec2::from([1280, 1024]),
-    };
-    let state = futures::executor::block_on(State::new(&window_handle, resolution, color_format));
-    STATE = &mut state as *mut State;
-    std::mem::forget(state);
+    // #[cfg(target_os = "linux")]
+    // let window_handle = if window_handle == 0 {
+    //     panic!()
+    // } else {
+    //     WaylandDisplayHandle {
+    //         display: window_handle as *mut c_void,
+    //     }
+    // };
+
+    todo!()
 }
 
 #[allow(non_snake_case)]
@@ -395,12 +334,7 @@ pub unsafe extern "C" fn grGetProcAddress(procName: *mut char) -> GrProc {
 
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn grEnable(mode: GrEnableMode_t) {
-    let mode = match GrEnableMode::try_from(mode) {
-        Ok(m) => m,
-        Err(_) => panic!(), // TODO: Error Handling
-    };
-    //STATE.mode = mode;
-    //todo!();
+    todo!()
 }
 
 #[allow(non_snake_case)]
@@ -670,13 +604,6 @@ pub unsafe extern "C" fn grLfbReadRegion(
 /*
 ** glide management functions
 */
-#[allow(non_snake_case)]
-pub unsafe extern "C" fn grGlideInit() {
-    /*grGlideInit initializes the Glide library, performing tasks such as finding any installed graphics
-    subsystems, allocating memory, and initializing state variables. grGlideInit must be called before any
-    other Glide routines are called (the one exception is noted below).*/
-    //todo!();
-}
 
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn grGlideShutdown() {
@@ -695,16 +622,18 @@ pub unsafe extern "C" fn grGlideSetState(state: *const c_void) {
 
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn grGlideGetVertexLayout(layout: *mut c_void) {
-    unsafe {
-        std::ptr::copy_nonoverlapping(
-            &mut (*STATE).vertex_layout,
-            layout as *mut VertexBufferLayout,
-            std::mem::size_of::<VertexBufferLayout>(),
-        )
-    }
+    // unsafe {
+    //     std::ptr::copy_nonoverlapping(
+    //         &mut (*STATE).vertex_layout,
+    //         layout as *mut VertexBufferLayout,
+    //         std::mem::size_of::<VertexBufferLayout>(),
+    //     )
+    // }
+    todo!()
 }
 
 #[allow(non_snake_case)]
 pub unsafe extern "C" fn grGlideSetVertexLayout(layout: *const c_void) {
-    (*STATE).vertex_layout = *(layout as *const VertexBufferLayout);
+    // (*STATE).vertex_layout = *(layout as *const VertexBufferLayout);
+    todo!()
 }
